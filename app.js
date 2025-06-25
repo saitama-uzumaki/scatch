@@ -12,6 +12,7 @@ const ownersRouter = require("./routes/ownersRouter");
 const productsRouter = require("./routes/productsRouter");
 const usersRouter = require("./routes/usersRouter");
 const indexRouter = require("./routes/index");
+const accountRouter = require("./routes/accountRouter"); // ✅ Add this
 
 // MongoDB Connection
 const connectDB = require("./config/mongoose-connection");
@@ -41,10 +42,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
 // Routes (must come after session and flash middlewares)
+app.use("/account", accountRouter); // ✅ Mount the route
 app.use("/owners", ownersRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 app.use("/", indexRouter); // Root route should be last
+
 
 // Server listen
 const PORT = process.env.PORT || 3000;

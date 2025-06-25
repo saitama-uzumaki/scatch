@@ -8,6 +8,10 @@ router.get("/", function (req, res) {
   res.send("hey its working ");
 });
 
+router.get("/account", isloggedin, function (req, res) {
+    res.render("account", { user: req.user });
+});
+
 router.post("/register", registerUser);
 
 router.post("/login",loginUser);

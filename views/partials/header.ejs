@@ -10,17 +10,15 @@
 </head>
 
 <body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between  px-5 py-3">
-        <h3 class="text-xl">Scatch</h3>
-        <% var loggedin = typeof loggedin !== "undefined" ? loggedin : true %>
-        <% if (loggedin){ %>
-             <div class="flex gap-5">
-            <a href="">shop</a>
-            <a href="/cart">Cart</a>
-            <a href="">My Account</a>
-            <a class="text-red-600" href="/users/logout">Logout</a>
+    <nav class="w-full flex justify-between px-5 py-3">
+    <h3 class="text-xl">Scatch</h3>
+    <% var loggedin = typeof loggedin !== "undefined" ? loggedin : true %>
+    <% if (loggedin) { %>
+        <div class="flex gap-5">
+            <a href="/shop" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">shop</a>
+            <a href="/cart" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">Cart</a>
+            <a href="/account" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">My Account</a>
+            <a class="text-red-600 transition-all duration-150 hover:font-bold hover:underline hover:scale-105" href="/users/logout">Logout</a>
         </div>
-
-        <%}%>
-       
-    </nav>
+    <% } %>
+</nav>

@@ -1,66 +1,58 @@
 const userModel = require("../models/user-model");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const {generateToken} = require("../utils/generateToken");
+const { generateToken } = require("../utils/generateToken");
 
-
-
+// Register a new user
 module.exports.registerUser = async function (req, res) {
   try {
     const { email, password, fullname } = req.body;
 
-    let user = await userModel.findOne({email:email})
+    const existingUser = await userModel.findOne({ email });
 
-    if(user) return res.status(401).send("you already had an account , please login ")
-    bcrypt.genSalt(10, function (err, salt) {
-      if (err) return res.send(err.message);
+    if (existingUser) {
+      return res.status(401).send("You already have an account, please login.");
+    }
 
-      bcrypt.hash(password, salt, async function (err, hash) {
-        if (err) return res.send(err.message);
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
 
-        try {
-          const user = await userModel.create({
-            email,
-            password: hash,
-            fullname,
-          });
-
-          // ✅ Correct jwt.sign syntax
-        //   const token = jwt.sign({ email: user.email, id: user._id }, "heyheyhey");
-       let token =  generateToken(user);
-          // ✅ Send token in cookie
-          res.cookie("token", token);
-          res.send("user created successfully");
-        } catch (dbErr) {
-          res.send(dbErr.message);
-        }
-      });
+    const user = await userModel.create({
+      email,
+      password: hash,
+      fullname,
     });
+
+    const token = generateToken(user);
+    res.cookie("token", token, { httpOnly: true });
+
+    return res.redirect("/shop");
   } catch (err) {
-    res.send(err.message);
+    return res.status(500).send("Server error: " + err.message);
   }
 };
 
-module.exports.loginUser = async function (req,res){
- let {email,password} = req.body;
+// Login user
+module.exports.loginUser = async function (req, res) {
+  const { email, password } = req.body;
 
- let user = await userModel.findOne({email:email});
- if(!user) return res.send("Email or password incorrect");
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) return res.status(401).send("Email or password incorrect.");
 
- bcrypt.compare(password,user.password , function(err,result){
-     if(result){
-        let token = generateToken(user);
-        res.cookie("token",token);
-        res.send("you can login ");
-     }
-     else {
-        return res.send("Email or password incorrect");
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).send("Email or password incorrect.");
 
-     }
- });
+    const token = generateToken(user);
+    res.cookie("token", token, { httpOnly: true });
+
+    return res.redirect("/shop");
+  } catch (err) {
+    return res.status(500).send("Server error: " + err.message);
+  }
 };
 
-module.exports.logout = function(req,res){
-    res.cookie("token");
-    res.redirect("/");
+// Logout user
+module.exports.logout = function (req, res) {
+  res.clearCookie("token");
+  res.redirect("/");
 };

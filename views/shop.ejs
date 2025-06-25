@@ -1,12 +1,12 @@
 <%- include('./partials/header') %>
 
-     <% if(success.length>0){ %>
-        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
-            <span class="inline-block mt-1 mb-1 text-white">
-                <%= success %>
-            </span>
-        </div>
-        <% } %>
+<% if(success.length>0){ %>
+    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+        <span class="inline-block mt-1 mb-1 text-white">
+            <%= success %>
+        </span>
+    </div>
+<% } %>
 
 <div class="w-full h-screen flex items-start px-20 py-20">
     <div class="w-[25%] flex h-screen flex-col items-start">
@@ -33,7 +33,10 @@
 
     <div class="w-[75%] flex flex-col gap-5 h-screen">
         <div class="flex items-start gap-5 flex-wrap">
-            <% products.forEach(function(product){ %>
+            <% products.forEach(function(product){ 
+                let cartItem = user.cart.find(i => i.product._id.toString() === product._id.toString());
+                let quantity = cartItem ? cartItem.quantity : 0;
+            %>
                 <div class="w-60">
                     <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
                         <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="">
@@ -42,11 +45,16 @@
                         <div>
                             <h3><%= product.name %></h3>
                             <h4>₹ <%= product.price - (product.price * (product.discount || 0) / 100) %></h4>
+                            <p class="text-xs mt-1">Qty in cart: <%= quantity %></p>
                         </div>
-                        <!-- ✅ Corrected line below -->
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
-                            <i class="ri-add-line"></i>
-                        </a>
+                        <div class="flex flex-col gap-1">
+                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
+                                <i class="ri-add-line"></i>
+                            </a>
+                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/removefromcart/<%= product._id %>">
+                                <i class="ri-subtract-line"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             <% }) %>
