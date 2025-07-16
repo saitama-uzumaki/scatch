@@ -1,0 +1,45 @@
+<%- include("partials/header") %>
+
+<div class="max-w-4xl mx-auto mt-10 px-4">
+  <h2 class="text-2xl font-semibold mb-6">Enter Shipping Address</h2>
+
+  <form action="/checkout" method="POST" class="space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block font-medium">Full Name</label>
+        <input type="text" name="fullname" required class="w-full border px-3 py-2 rounded-md" />
+      </div>
+      <div>
+        <label class="block font-medium">Mobile</label>
+        <input type="text" name="mobile" required class="w-full border px-3 py-2 rounded-md" />
+      </div>
+      <div class="sm:col-span-2">
+        <label class="block font-medium">Address Line 1</label>
+        <input type="text" name="line1" required class="w-full border px-3 py-2 rounded-md" />
+      </div>
+      <div>
+        <label class="block font-medium">City</label>
+        <input type="text" name="city" required class="w-full border px-3 py-2 rounded-md" />
+      </div>
+      <div>
+        <label class="block font-medium">Pincode</label>
+        <input type="text" name="pincode" required class="w-full border px-3 py-2 rounded-md" />
+      </div>
+      <div class="sm:col-span-2">
+        <label class="block font-medium">State</label>
+        <input type="text" name="state" required class="w-full border px-3 py-2 rounded-md" />
+      </div>
+    </div>
+
+    <div class="pt-6">
+      <button
+        type="submit"
+        class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 w-full"
+      >
+        Continue to Confirm
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include("partials/footer") %>

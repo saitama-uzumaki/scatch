@@ -13,7 +13,7 @@ const productsRouter = require("./routes/productsRouter");
 const usersRouter = require("./routes/usersRouter");
 const indexRouter = require("./routes/index");
 const accountRouter = require("./routes/accountRouter"); // ✅ Add this
-
+const checkoutRouter = require("./routes/checkoutRouter");
 // MongoDB Connection
 const connectDB = require("./config/mongoose-connection");
 connectDB(); // Connect to database
@@ -47,7 +47,7 @@ app.use("/owners", ownersRouter);
 app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 app.use("/", indexRouter); // Root route should be last
-
+app.use("/checkout", checkoutRouter);
 
 // Server listen
 const PORT = process.env.PORT || 3000;

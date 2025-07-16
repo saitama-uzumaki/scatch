@@ -73,9 +73,13 @@
                     <h3 class="text-xl font-bold text-green-600">₹ <%= (total + 20).toFixed(2) %></h3>
                 </div>
 
-                <form action="" class="mt-6">
-                    <button class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 w-full">Checkout</button>
-                </form>
+                <form action="/checkout" method="GET" class="mt-6">
+  <button
+    class="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 w-full"
+  >
+    Checkout
+  </button>
+</form>
             </div>
         </div>
     <% } %>
