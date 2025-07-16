@@ -13,4 +13,20 @@ router.get("/", isLoggedin, async (req, res) => {
   }
 });
 
+
+const orderModel = require("../models/order-model");
+
+router.get("/orders", isLoggedin, async (req, res) => {
+  try {
+    const orders = await orderModel
+      .find({ user: req.user._id })
+      .populate("items.product")
+      .sort({ createdAt: -1 }); // Most recent first
+
+    res.render("order-history", { orders });
+  } catch (err) {
+    res.status(500).send("Error loading orders: " + err.message);
+  }
+});
+
 module.exports = router;

@@ -13,6 +13,12 @@ router.get("/", isLoggedin, (req, res) => {
 router.post("/", isLoggedin, async (req, res) => {
   const { fullname, mobile, line1, city, pincode, state } = req.body;
 
+    // 🔴 ADD THIS VALIDATION HERE:
+  if (!fullname || !mobile || !line1 || !city || !pincode || !state) {
+    req.flash("error", "Please fill out all address fields");
+    return res.redirect("/checkout");
+  }
+
   // ✅ Store this in session (temporary)
   req.session.address = { fullname, mobile, line1, city, pincode, state };
 
