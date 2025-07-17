@@ -1,113 +1,65 @@
 <%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20">
-        <div class="w-[25%] flex h-screen flex-col items-start">
-            <div class="flex flex-col">
-                <a class="block w-fit mb-2" href="">All Products</a>
-                <a class="block w-fit mb-2" href="">Create new product</a>
-            </div>
-        </div>
-        <div class="w-[75%] flex flex-col gap-5 h-screen">
-            <a class="text-red-500" href="">Delete all</a>
-            <div class="flex items-start gap-5">
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-start gap-5">
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="w-60 bg-red-500">
-                    <div class="w-full h-52 bg-yellow-500"></div>
-                    <div class="flex justify-between items-center px-4 py-4">
-                        <div>
-                            <h3>Clinge Bag</h3>
-                            <h4>₹ 1200</h4>
-                        </div>
-                        <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                            <i class="ri-add-line"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="w-full min-h-screen flex items-start px-20 py-20 gap-10">
+
+  <!-- Sidebar -->
+  <div class="w-[25%] flex flex-col items-start">
+    <div class="flex flex-col">
+      <a class="block w-fit mb-2" href="">All Products</a>
+      <a class="block w-fit mb-2" href="">Create new product</a>
     </div>
-    <%- include('./partials/footer') %>
+  </div>
+
+  <!-- Main Content -->
+  <div class="w-[75%] flex flex-col gap-8">
+    
+    <!-- 🔥 Create Product Form -->
+    <form action="/owners/create-product" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4 bg-white shadow-md p-6 rounded-xl w-full max-w-xl">
+      <h2 class="text-xl font-bold text-gray-800">Add New Product</h2>
+
+      <input type="text" name="name" placeholder="Product Name" required class="border p-2 rounded w-full">
+      
+      <input type="number" name="price" placeholder="Price" required class="border p-2 rounded w-full">
+
+      <input type="number" name="discount" placeholder="Discount (Optional)" class="border p-2 rounded w-full">
+      
+      <select name="category" required class="border p-2 rounded w-full">
+        <option value="" disabled selected>Select Category</option>
+        <option value="Bags">Bags</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Shoes">Shoes</option>
+        <option value="Clothing">Clothing</option>
+      </select>
+
+      <!-- Optional styling inputs -->
+      <input type="text" name="bgcolor" placeholder="Background Color (Optional)" class="border p-2 rounded w-full">
+      <input type="text" name="panelcolor" placeholder="Panel Color (Optional)" class="border p-2 rounded w-full">
+      <input type="text" name="textcolor" placeholder="Text Color (Optional)" class="border p-2 rounded w-full">
+
+      <input type="file" name="image" accept="image/*" required class="border p-2 rounded w-full">
+
+      <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Create Product</button>
+    </form>
+
+    <!-- Existing products (you can keep or improve this) -->
+    <a class="text-red-500" href="">Delete all</a>
+    <div class="flex flex-wrap gap-5">
+      <% products.forEach(product => { %>
+        <div class="w-60 bg-red-500">
+          <div class="w-full h-52 bg-yellow-500"></div>
+          <div class="flex justify-between items-center px-4 py-4">
+            <div>
+              <h3><%= product.name %></h3>
+              <h4>₹ <%= product.price %></h4>
+              <p class="text-sm text-white">Category: <%= product.category %></p>
+            </div>
+            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
+              <i class="ri-add-line"></i>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+  </div>
+</div>
+<%- include('./partials/footer') %>

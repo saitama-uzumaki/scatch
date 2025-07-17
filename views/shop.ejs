@@ -1,10 +1,8 @@
 <%- include('./partials/header') %>
 
-<% if(success.length>0){ %>
+<% if(success.length > 0) { %>
     <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
-        <span class="inline-block mt-1 mb-1 text-white">
-            <%= success %>
-        </span>
+        <span class="inline-block mt-1 mb-1 text-white"><%= success %></span>
     </div>
 <% } %>
 
@@ -13,52 +11,69 @@
         <div class="flex items-center gap-2">
             <h3>sort by</h3>
             <form action="/shop">
-                <select class="border-[1px] px-2 py-1" name="sortby" id="">
+                <select class="border-[1px] px-2 py-1" name="sortby" onchange="this.form.submit()">
                     <option value="popular">Popular</option>
                     <option value="newest">Newest</option>
                 </select>
             </form>
         </div>
+
         <div class="flex flex-col mt-20">
-            <a class="block w-fit mb-2" href="">New Collection</a>
-            <a class="block w-fit mb-2" href="">All Products</a>
-            <a class="block w-fit mb-2" href="">Discounted Products</a>
-        </div>
-        <div class="mt-32">
-            <a class="block w-fit mb-2" href="">Filter by :</a>
-            <a class="block w-fit mb-2" href="">Availability</a>
-            <a class="block w-fit mb-2" href="">Discount</a>
+            <a class="block w-fit mb-2" href="/shop?filter=new">New Collection</a>
+            <a class="block w-fit mb-2" href="/shop">All Products</a>
+            <a class="block w-fit mb-2" href="/shop?filter=discount">Discounted Products</a>
+            <a class="block w-fit mb-2" href="/shop?filter=available">Available</a>
         </div>
     </div>
 
-    <div class="w-[75%] flex flex-col gap-5 h-screen">
-        <div class="flex items-start gap-5 flex-wrap">
-            <% products.forEach(function(product){ 
-                let cartItem = user.cart.find(i => i.product._id.toString() === product._id.toString());
-                let quantity = cartItem ? cartItem.quantity : 0;
-            %>
-                <div class="w-60">
-                    <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                        <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="">
-                    </div>
-                    <div class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
-                        <div>
-                            <h3><%= product.name %></h3>
-                            <h4>₹ <%= product.price - (product.price * (product.discount || 0) / 100) %></h4>
-                            <p class="text-xs mt-1">Qty in cart: <%= quantity %></p>
+    <div class="w-[75%] flex flex-col gap-5 min-h-screen">
+        <!-- ✅ Search Bar -->
+        <form action="/shop" method="GET" class="w-full flex justify-center mb-6">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search products..." 
+                value="<%= search || '' %>" 
+                class="w-[60%] px-4 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+            />
+            <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                Search
+            </button>
+        </form>
+
+        <!-- ✅ Grouped Product Sections -->
+        <% categorizedProducts.forEach(categoryBlock => { %>
+            <div>
+                <h2 class="text-2xl font-bold mb-4"><%= categoryBlock.category %></h2>
+                <div class="flex gap-5 overflow-x-auto pb-4">
+                    <% categoryBlock.products.forEach(product => { 
+                        let cartItem = user.cart.find(i => i.product._id.toString() === product._id.toString());
+                        let quantity = cartItem ? cartItem.quantity : 0;
+                    %>
+                        <div class="w-60 flex-shrink-0">
+                            <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
+                                <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="">
+                            </div>
+                            <div class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
+                                <div>
+                                    <h3><%= product.name %></h3>
+                                    <h4>₹ <%= product.price - (product.price * (product.discount || 0) / 100) %></h4>
+                                    <p class="text-xs mt-1">Qty in cart: <%= quantity %></p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
+                                        <i class="ri-add-line"></i>
+                                    </a>
+                                    <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/removefromcart/<%= product._id %>">
+                                        <i class="ri-subtract-line"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex flex-col gap-1">
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/addtocart/<%= product._id %>">
-                                <i class="ri-add-line"></i>
-                            </a>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="/removefromcart/<%= product._id %>">
-                                <i class="ri-subtract-line"></i>
-                            </a>
-                        </div>
-                    </div>
+                    <% }) %>
                 </div>
-            <% }) %>
-        </div>
+            </div>
+        <% }) %>
     </div>
 </div>
 

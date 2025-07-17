@@ -18,14 +18,55 @@ router.get("/", function (req, res) {
 //     res.send("something went wrong");
 // }
 // });
-
 router.get("/shop", isLoggedin, async function (req, res) {
-    let products = await productModel.find();
-    let user = await userModel.findOne({ email: req.user.email }).populate("cart.product");
-    let success = req.flash("success");
+    let filter = req.query.filter;
+    let search = req.query.search;
 
-    res.render("shop", { products, success, user }); // ✅ pass user to EJS
+    let query = {};
+
+    // Filtering logic
+    if (filter === "available") {
+        query.stock = { $gt: 0 };
+    } else if (filter === "discount") {
+        query.discount = { $gt: 0 };
+    } else if (filter === "new") {
+        query.tag = "new";
+    }
+
+    // Search logic
+    if (search) {
+        query.name = { $regex: search, $options: "i" };
+    }
+
+    // Fetch all products matching search/filter
+    let products = await productModel.find(query);
+
+   let categorizedProducts = {};
+
+// Step 1: Group products
+products.forEach(product => {
+    const category = product.category || "Uncategorized"; // fallback for old data
+    if (!categorizedProducts[category]) {
+        categorizedProducts[category] = [];
+    }
+    categorizedProducts[category].push(product);
 });
+
+// Step 2: Convert object to array of { category, products }
+const categorizedArray = Object.entries(categorizedProducts).map(([category, items]) => ({
+    category,
+    products: items
+}));
+
+res.render('shop', {
+    user: req.user,
+    success: req.flash('success'),
+    search: req.query.search,
+    categorizedProducts: categorizedArray
+});
+});
+
+
 
 // router.get("/cart",isLoggedin,async function (req,res){
 //     let user = await userModel.findOne({email : req.user.email}).populate("cart.product");
