@@ -21,6 +21,13 @@ const userSchema = mongoose.Schema({
   },
   contact: Number,
   picture: String,
+  otp: String,
+  otpExpiry: Date,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  }
+
 }, { timestamps: true }); // ✅ this line adds createdAt and updatedAt
 // ✅ correct export
 module.exports = mongoose.model("user", userSchema);

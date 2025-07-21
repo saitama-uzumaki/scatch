@@ -1,0 +1,6 @@
+<form action="/users/verify-otp" method="POST">
+  <input type="hidden" name="email" value="<%= email %>" />
+  <label for="otp">Enter OTP:</label>
+  <input type="text" name="otp" required />
+  <button type="submit">Verify</button>
+</form>

@@ -4,22 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Scatch</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between px-5 py-3">
-    <h3 class="text-xl">Scatch</h3>
-    <% var loggedin = typeof loggedin !== "undefined" ? loggedin : true %>
+<body class="font-['helvetica_now_display'] bg-gray-50">
+    <% var loggedin = typeof user !== "undefined" && user !== null %>
+    
+
     <% if (loggedin) { %>
-        <div class="flex gap-5">
-            <a href="/shop" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">shop</a>
-            <a href="/cart" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">Cart</a>
-            <a href="/account" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">My Account</a>
-             <a href="/account/orders" class="transition-all duration-150 hover:font-bold hover:text-red-500 hover:underline hover:scale-105">My Orders</a>
-            <a class="text-red-600 transition-all duration-150 hover:font-bold hover:underline hover:scale-105" href="/users/logout">Logout</a>
+    <nav class="w-full flex justify-between items-center px-6 py-4 bg-white shadow">
+        <!-- Brand name (hidden when not logged in) -->
+        <a href="/" class="text-2xl font-bold text-blue-600">Scatch</a>
+
+        <!-- Navbar links -->
+        <div class="flex gap-6 items-center text-gray-700 font-medium">
+            <a href="/shop" class="hover:text-blue-600 hover:underline">Shop</a>
+            <a href="/cart" class="hover:text-blue-600 hover:underline">Cart</a>
+            <a href="/account" class="hover:text-blue-600 hover:underline">My Account</a>
+            <a href="/account/orders" class="hover:text-blue-600 hover:underline">My Orders</a>
+            <a href="/users/logout" class="text-red-500 hover:underline">Logout</a>
         </div>
+    </nav>
     <% } %>
-</nav>

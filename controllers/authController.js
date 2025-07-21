@@ -1,14 +1,15 @@
 const userModel = require("../models/user-model");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/generateToken");
+const transporter = require("../config/email");
+const crypto = require("crypto");
 
-// Register a new user
+// ✅ Register a new user
 module.exports.registerUser = async function (req, res) {
   try {
     const { email, password, fullname } = req.body;
 
     const existingUser = await userModel.findOne({ email });
-
     if (existingUser) {
       return res.status(401).send("You already have an account, please login.");
     }
@@ -31,7 +32,7 @@ module.exports.registerUser = async function (req, res) {
   }
 };
 
-// Login user
+// ✅ Login user (email + password)
 module.exports.loginUser = async function (req, res) {
   const { email, password } = req.body;
 
@@ -51,8 +52,55 @@ module.exports.loginUser = async function (req, res) {
   }
 };
 
-// Logout user
+// ✅ Logout user
 module.exports.logout = function (req, res) {
   res.clearCookie("token");
   res.redirect("/");
+};
+
+// ✅ Send OTP for login
+module.exports.sendOtpLogin = async function (req, res) {
+  const { email } = req.body;
+
+  let user = await userModel.findOne({ email });
+
+  // Auto-create user if not exist
+  if (!user) {
+    user = await userModel.create({ email, fullname: "New User" });
+  }
+
+  const otp = crypto.randomInt(100000, 999999).toString();
+  user.otp = otp;
+  user.otpExpiry = Date.now() + 10 * 60 * 1000; // valid for 10 minutes
+  await user.save();
+
+  await transporter.sendMail({
+    to: email,
+    subject: "Your OTP for Login",
+    text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
+  });
+
+  res.render("auth/verifyOTP", { email }); // Make sure this view exists
+};
+
+// ✅ Verify OTP and login
+module.exports.verifyOtpLogin = async function (req, res) {
+  const { email, otp } = req.body;
+
+  const user = await userModel.findOne({ email });
+  if (!user || user.otp !== otp || Date.now() > user.otpExpiry) {
+    req.flash("error", "Invalid or expired OTP");
+    return res.redirect("/login");
+  }
+
+  user.isVerified = true;
+  user.otp = null;
+  user.otpExpiry = null;
+  await user.save();
+
+  const token = generateToken(user);
+  res.cookie("token", token, { httpOnly: true });
+
+  req.flash("success", "OTP verified, you're logged in.");
+  res.redirect("/shop");
 };
