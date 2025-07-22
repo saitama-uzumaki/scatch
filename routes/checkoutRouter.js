@@ -28,15 +28,27 @@ router.post("/", isLoggedin, async (req, res) => {
 // Step 3: Show confirm-order page
 router.get("/confirm-order", isLoggedin, async (req, res) => {
   const user = await userModel.findById(req.user._id).populate("cart.product");
+
+  // 🔒 Ensure address exists in session
   const address = req.session.address;
+  if (!address) {
+    req.flash("error", "Please fill in your address first");
+    return res.redirect("/checkout");
+  }
 
   let total = 0;
-  user.cart.forEach(item => {
-    total += item.product.price * item.quantity;
-  });
+  user.cart = user.cart.filter(item => item.product !== null);
+  await user.save();
 
-  res.render("confirm-order", { user, address, total }); // 👈 views/confirm-order.ejs
+  user.cart.forEach(item => {
+    if (item.product) {
+      total += item.product.price * item.quantity;
+    }
+  });
+const platformFee = 20; // flat fee or calculate dynamically
+  res.render("confirm-order", { user, address, total , platformFee });
 });
+
 
 // Step 4: Show payment method selection
 router.get("/payment", isLoggedin, (req, res) => {
@@ -48,35 +60,41 @@ router.post("/payment", isLoggedin, async (req, res) => {
   const paymentMethod = req.body.paymentMethod;
   const address = req.session.address;
 
-  const user = await userModel.findById(req.user._id).populate("cart.product");
+  const user = await userModel.findById(req.user._id).populate("cart.product"); let total = 0;
+  const items = [];
 
-  let total = 0;
-  const items = user.cart.map(item => {
-    total += item.product.price * item.quantity;
-    return {
-      product: item.product._id,
-      quantity: item.quantity
-    };
+  user.cart = user.cart.filter(item => item.product !== null);
+  await user.save();
+
+  user.cart.forEach(item => {
+    if (item.product) {
+      total += item.product.price * item.quantity;
+      items.push({
+        product: item.product._id,
+        quantity: item.quantity
+      });
+    }
   });
 
-  // ✅ Save order to DB
+  const platformFee = 20;
+  const finalAmount = total + platformFee;
+
   await orderModel.create({
     user: req.user._id,
     items,
     address,
     paymentMethod,
-    totalAmount: total
+    totalAmount: finalAmount  // ✅ Save full total to DB
   });
 
-  // ✅ Clear user cart after order
+
   user.cart = [];
   await user.save();
-
-  // ✅ Clean up session
   delete req.session.address;
 
   res.redirect("/checkout/order-success");
 });
+
 
 // Step 6: Order success page
 router.get("/order-success", isLoggedin, (req, res) => {

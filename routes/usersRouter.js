@@ -7,18 +7,23 @@ const { logout } = require("../controllers/authController");
 const { sendOtpLogin, verifyOtpLogin } = require("../controllers/authController");
 
 router.get("/", function (req, res) {
-  res.send("hey its working ");
+  res.redirect("/login");
 });
 
 router.get("/account", isloggedin, function (req, res) {
     res.render("account", { user: req.user });
 });
 
-router.post("/register", registerUser);
+router.get("/register", (req, res) => {
+  res.render("auth/register");
+});
 
-router.post("/login",loginUser);
+router.get("/login", (req, res) => {
+  res.render("auth/login");
+});
 
 router.get("/logout",logout);
+router.post("/login", loginUser);  // 👈 This handles form POST
 
 router.post("/otp-login", sendOtpLogin);       // Step 1
 router.post("/verify-otp", verifyOtpLogin);    // Step 2

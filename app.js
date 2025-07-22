@@ -44,7 +44,7 @@ app.set("view engine", "ejs");
 // Routes (must come after session and flash middlewares)
 app.use("/account", accountRouter); // ✅ Mount the route
 app.use("/owners", ownersRouter);
-app.use("/users", usersRouter);
+app.use("/", usersRouter);
 app.use("/products", productsRouter);
 app.use("/", indexRouter); // Root route should be last
 app.use("/checkout", checkoutRouter);

@@ -1,4 +1,0 @@
-To run this project first 
-on  mongo db connect (check ip is whitelist )
-
-2. in terminal -> npx nodemon app.js
